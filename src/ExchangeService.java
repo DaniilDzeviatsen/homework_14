@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 public class ExchangeService {
@@ -6,6 +7,7 @@ public class ExchangeService {
 
     public ExchangeRate[] getExchangeRate() {
         return new ExchangeRate[]{
+                new ExchangeRate(Currency.BYN, new BigDecimal(String.valueOf(BASE_CURRENCY_VALUE))),
                 new ExchangeRate(Currency.USD, new BigDecimal("2.7981")),
                 new ExchangeRate(Currency.EUR, new BigDecimal("2.9769")),
                 new ExchangeRate(Currency.CNH, new BigDecimal("0.4073")),
@@ -26,16 +28,9 @@ public class ExchangeService {
             if (currencyToConvert == rate.getCurrency()) {
                 curTo = rate.getValueInBYN();
             }
-            if (currencyIn == Currency.BYN) {
-                curIn = BASE_CURRENCY_VALUE;
-            }
-            if (currencyToConvert == Currency.BYN) {
-                curTo = BASE_CURRENCY_VALUE;
-            }
-
         }
         BigDecimal amountInBYN = sum.multiply(curIn);
-        return amountInBYN.divide(curTo, 4);
+        return amountInBYN.divide(curTo, 4, RoundingMode.HALF_UP);
     }
 
 }
